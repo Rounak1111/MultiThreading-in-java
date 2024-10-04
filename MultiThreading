@@ -1,0 +1,51 @@
+//Thread concept
+class A{
+    int money=0;
+    int flag=0;
+    public synchronized void Withdraw(int money){
+        System.out.println(Thread.currentThread().getName()+ " is going to withdraw :");
+       try{
+        if (flag==0) {
+            System.out.println("Waiting __!");         
+            wait();   
+         }
+       }
+       catch(Exception e){
+        System.out.println("Something is wrong in your code : ");
+       }
+       this.money-=money;
+       System.out.println("Withdrawal complete !!!");
+    }
+
+public synchronized void Deposite(int money){
+    System.out.println(Thread.currentThread().getName()+ " is going to deposite :");
+    this.money +=money;
+    notifyAll();
+    System.out.println("Deposie is completed !!");
+    flag=1;
+
+}
+} 
+ public class Withdraw_and_deposite {
+    public static void main(String[] args) {
+        final A obj=new A();
+        Thread T1=new Thread(){
+            public void run(){
+                obj.Withdraw(4000);
+                System.out.println("After withdraw the amount is :"+obj.money);
+
+            }
+        };
+        Thread T2=new Thread(){
+            public void run(){
+                obj.Deposite(10000);
+                System.out.println("After deposite the amount is :"+obj.money);
+
+            }
+        };
+      T1.setName("Hii");
+      T2.setName("Hello");
+      T1.start();
+      T2.start();
+    }
+}
